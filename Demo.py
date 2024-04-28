@@ -64,9 +64,8 @@ def menu():
                 print("Vänligen ladda befolkningsdata 2022 först (Menyalternativ 1).")
 
         elif choice == "3":
-            if befolkningsdata_2022:
-                analyzed_data_2022 = analyzed_data[:]
-                analysera_data_uppg3(analyzed_data_2022)
+            if analyzed_data:
+                analysera_data_uppg3(analyzed_data)
             else:
                 print("Problem uppstod vid choice 3")
             
@@ -119,6 +118,15 @@ def analysera_data_uppg2(lista):
 ################################ Uppgift 3 ################################
 
 def analysera_data_uppg3(lista):
+    data_rows = lista[1:]
+
+    # key=lambda x: float(x[5]): sorterar datan enligt 6:e column. Konverterar strings till floats för att numarical sortering
+    # annars det sorterar datan alfabetisk
+    data_rows_sorted = sorted(data_rows, key=lambda x: float(x[5]), reverse=True) 
+
+    top_increases = data_rows_sorted[:5] #lagra den högsta fem
+    top_decreases = data_rows_sorted[-5:] #lagra den minsta fem
+    
     print("===================================================================================================")
     print("|          Förväntad befolkningsutveckling för tio länder inom EU under åren 2022 -- 2100          |")
     print("|          Tabellen visar de fem länder med störst respektive minst förväntad befolkningsökning    |")
@@ -129,10 +137,25 @@ def analysera_data_uppg3(lista):
     ))
     print("---------------------------------------------------------------------------------------------------")
 
-    for i in lista:
-        print("{:<10} {:<25} {:<25} {:<20} {:<25} {:<15}".format(str(i[0]), str(i[1]), str(i[2]), str(i[3]), str(i[4]), str(i[5])))
+    print("De fem länder med högsta förväntad befolkningsökning:")
+    for i in top_increases:
+        print("{:<10} {:<25} {:<25} {:<20} {:<25} {:<15}".format(*i))
 
-################################################################
+
+    print("\nDe fem länder med minsta förväntad befolkningsökning:")
+    for i in top_decreases:
+        print("{:<10} {:<25} {:<25} {:<20} {:<25} {:<15}".format(*i))
+
+
+
+################################ Uppgift 4 ################################
+
+
+
+
+
+
+
 
 
 if __name__ == "__main__":
