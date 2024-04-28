@@ -23,11 +23,6 @@ def störstaTal(lista):
             störstaTal = i
     return störstaTal
 
-# def medelVärde(lista):
-#     summa = sum([i for i in lista])
-#     antal = len(lista)
-#     return summa / antal
-
 def medelVärde(lista):
     summa = 0
     for num in lista:
@@ -41,21 +36,19 @@ print("Största Tal: ", störstaTal(slumpLista))
 print("Medelvärde: ", medelVärde(slumpLista))
 
 
+# print(int(5 // 2))
+# print(f' {8:5d}', end = "")
 
 
-
-
-    
-# tal = 3.1415
-
-# print(f'Talet avrundat blev: {tal:.3}')
-
-# print(f'Talet avrundat blev: {tal:<10.2f}')
-
-# print(f'Talet avrundat blev: {tal:.2f}')
-
-# print(f'Talet avrundat blev: {tal:10.2f}')
-  
-# dätå = 5 // 2
-
-# print(dätå)
+def isprime(num):
+    if num==2 or num==3:
+        return True
+    if num%2==0 or num<2:
+        return False
+    for n in range(3,int(num**0.5)+1,2):   
+        if num%n==0:
+            return False   
+    return True
+print(isprime(13))
+print(isprime(18))
+print(isprime(17))
