@@ -64,8 +64,12 @@ def menu():
                 print("Vänligen ladda befolkningsdata 2022 först (Menyalternativ 1).")
 
         elif choice == "3":
-            # Lägg till funktion för uppgift 3 här
-            pass
+            if befolkningsdata_2022:
+                analyzed_data_2022 = analyzed_data[:]
+                analysera_data_uppg3(analyzed_data_2022)
+            else:
+                print("Problem uppstod vid choice 3")
+            
         elif choice == "4":
             # Lägg till funktion för uppgift 4 här
             pass
@@ -109,14 +113,20 @@ def analysera_data_uppg2(lista):
         population_change = (population_years[-1] - population_years[0]) / population_years[0] * 100
         result_list.append([country, lowest_population, lowest_year, highest_population, highest_year, population_change])
     return result_list
-################################################################
-
 
 
 
 ################################ Uppgift 3 ################################
 
-
+def analysera_data_uppg3(lista):
+    print("===================================================================================================")
+    print("|          Förväntad befolkningsutveckling för tio länder inom EU under åren 2022 -- 2100          |")
+    print("|          Tabellen visar de fem länder med störst respektive minst förväntad befolkningsökning    |")
+    print("===================================================================================================")
+    print("          Estimerad befolkning")
+    print("{:<15} {:<20} {:<10} {:<20} {:<10} {:<15}".format(
+        "Land", "Lägst befolkningstalet", "År", "Högst befolkningstalet", "År", "Förändring [%]"
+    ))
 
 ################################################################
 
