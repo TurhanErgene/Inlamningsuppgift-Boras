@@ -123,10 +123,14 @@ def analysera_data_uppg3(lista):
     print("|          Förväntad befolkningsutveckling för tio länder inom EU under åren 2022 -- 2100          |")
     print("|          Tabellen visar de fem länder med störst respektive minst förväntad befolkningsökning    |")
     print("===================================================================================================")
-    print("          Estimerad befolkning")
-    print("{:<15} {:<20} {:<10} {:<20} {:<10} {:<15}".format(
+    print("Estimerad befolkning:\n")
+    print("{:<10} {:<25} {:<25} {:<20} {:<25} {:<15}".format(
         "Land", "Lägst befolkningstalet", "År", "Högst befolkningstalet", "År", "Förändring [%]"
     ))
+    print("---------------------------------------------------------------------------------------------------")
+
+    for i in lista:
+        print("{:<10} {:<25} {:<25} {:<20} {:<25} {:<15}".format(str(i[0]), str(i[1]), str(i[2]), str(i[3]), str(i[4]), str(i[5])))
 
 ################################################################
 
