@@ -71,7 +71,8 @@ def menu():
             
         elif choice == "4":
             if befolkningsdata_2022:
-                analysera_data_uppg4(befolkningsdata_2022)
+                top_increases, top_decreases = analysera_data_uppg3(befolkningsdata_2022)
+                analysera_data_uppg4(befolkningsdata_2022, top_increases, top_decreases)
             else:
                 print("Problem uppstod vid choice 4")
 
@@ -160,14 +161,29 @@ def analysera_data_uppg3(lista):
 
 ################################ Uppgift 4 ################################
 
-def analysera_data_uppg4(lista):
-    ökande_o_fallande_lander = analysera_data_uppg3(lista)
+def normalize_population_data(data, base_year_index):
+    base_value = float(data[base_year_index].replace(' ', ''))
+    return [((float(value.replace(' ', '')) / base_value) * 100) if value.strip() else None for value in data]
 
-    print(ökande_o_fallande_lander)
+def analysera_data_uppg4(lista, top_countries_increase, top_countries_decrease):
+    # The list of years should match the data provided for each country.
+    # Assuming the data starts from 2022 and goes annually up to the length of the population data.
+    years = list(range(2022, 2022 + len(lista[0]) - 1))  # Adjust this line if needed
 
-    # plt.plot(ökande_o_fallande_lander)
-    # plt.show()
+    plt.figure(figsize=(12, 8))
 
+    for country_data in top_countries_increase + top_countries_decrease:
+        country_name = country_data[0]
+        normalized_data = normalize_population_data(country_data[1:], 0)  # Normalizing against the first year in the list
+        plt.plot(years, normalized_data, label=country_name)
+
+    plt.title('Förväntad befolkningsutveckling inom EU för tidsperioden 2022 - 2100')
+    plt.xlabel('År')
+    plt.ylabel('Relativ befolkningsförändring från 2022 (%)')
+    plt.axhline(100, color='grey', linewidth=0.8, linestyle='--')  # Horizontal line at the 100% level
+    plt.grid(True)
+    plt.legend()
+    plt.show()
 
 
 
