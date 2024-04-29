@@ -1,12 +1,14 @@
 import csv
+import matplotlib.pyplot as plt
 
 
 def read_file(file_name):
     # Läs innehållet av en csv fil och returnera en lista av listor där varje sublist representerar en rad.
     data = []
     try:
-        with open(file_name, newline="", encoding="utf-8") as file:
+        with open(file_name, newline="", encoding="utf-8-sig") as file:  # utf-8-sig removes the BOM
             reader = csv.reader(file, delimiter=";")
+            next(reader, None)  # Skip the header row
             for row in reader:
                 data.append(row)
         print(f"Data loaded successfully from {file_name}")
@@ -18,7 +20,7 @@ def read_file(file_name):
 
 
 def menu():
-    """Huvudmeny för att navigera mellan uppgifter."""
+    ### Huvudmeny för att navigera mellan uppgifter. 
     befolkningsdata_2019 = []
     befolkningsdata_2022 = []
 
@@ -33,16 +35,14 @@ def menu():
         choice = input("Välj menyalternativ (1-6): ")
 
         if choice == "1":
-            file1 = input(
-                "Ange filnamn för befolkningsdata 2019 (eller tryck ENTER för att läsa in båda): "
-            )
+            file1 = input("Ange filnamn för befolkningsdata 2019 (eller tryck ENTER för att läsa in båda): ")
             if file1 == "":
                 befolkningsdata_2019 = read_file("befolkningsdata_2019.csv")
                 befolkningsdata_2022 = read_file("befolkningsdata_2022.csv")
             else:
-                befolkningsdata_2019 = read_file(file1)
+                befolkningsdata_2019 = read_file(file1)  
                 file2 = input("Ange filnamn för befolkningsdata 2022: ")
-                befolkningsdata_2022 = read_file(file2)
+                befolkningsdata_2022 = read_file(file2)  
 
             # Skriv ut de två första raderna från varje lista som kontroll
             if befolkningsdata_2019:
@@ -50,7 +50,7 @@ def menu():
                 for row in befolkningsdata_2019[:2]:
                     print(row)
             if befolkningsdata_2022:
-                print("Första två raderna i befolkningsdata_2022:")
+                print("\nFörsta två raderna i befolkningsdata_2022:")
                 for row in befolkningsdata_2022[:2]:
                     print(row)
 
@@ -70,8 +70,11 @@ def menu():
                 print("Problem uppstod vid choice 3")
             
         elif choice == "4":
-            # Lägg till funktion för uppgift 4 här
-            pass
+            if befolkningsdata_2022:
+                analysera_data_uppg4(befolkningsdata_2022)
+            else:
+                print("Problem uppstod vid choice 4")
+
         elif choice == "5":
             # Lägg till funktion för uppgift 5 här
             pass
@@ -104,12 +107,17 @@ def analysera_data_uppg2(lista):
     result_list = []
     for row in lista:
         country = row[0]
+        year_tvatva = int(row[1])
+        year_hundra = int(row[18])
+
+        # result_list.append([country, year_tvatva, year_hundra])
+       
         population_years = list(map(int, row[1:]))  # Omvandla befolkningstal till heltal och spara inom en lista
         lowest_population = min_värde(population_years)
         highest_population = max_värde(population_years)
         lowest_year = 2022 + population_years.index(lowest_population)
         highest_year = 2022 + population_years.index(highest_population)
-        population_change = (population_years[-1] - population_years[0]) / population_years[0] * 100
+        population_change = (year_hundra - year_tvatva) / year_hundra * 100
         result_list.append([country, lowest_population, lowest_year, highest_population, highest_year, population_change])
     return result_list
 
@@ -140,19 +148,25 @@ def analysera_data_uppg3(lista):
     print("De fem länder med högsta förväntad befolkningsökning:")
     for i in top_increases:
         print("{:<10} {:<25} {:<25} {:<20} {:<25} {:<15}".format(*i))
-
+    
 
     print("\nDe fem länder med minsta förväntad befolkningsökning:")
     for i in top_decreases:
         print("{:<10} {:<25} {:<25} {:<20} {:<25} {:<15}".format(*i))
 
+    return top_increases, top_decreases
+
 
 
 ################################ Uppgift 4 ################################
 
+def analysera_data_uppg4(lista):
+    ökande_o_fallande_lander = analysera_data_uppg3(lista)
 
+    print(ökande_o_fallande_lander)
 
-
+    # plt.plot(ökande_o_fallande_lander)
+    # plt.show()
 
 
 
