@@ -65,13 +65,14 @@ def menu():
 
         elif choice == "3":
             if analyzed_data:
-                analysera_data_uppg3(analyzed_data)
+                ökande_lander, fallande_lander = analysera_data_uppg3(analyzed_data)
+                print_table(ökande_lander, fallande_lander)
             else:
                 print("Problem uppstod vid choice 3")
             
         elif choice == "4":
-            if befolkningsdata_2022:
-                top_increases, top_decreases = analysera_data_uppg3(befolkningsdata_2022)
+            if analyzed_data:
+                top_increases, top_decreases = analysera_data_uppg3(analyzed_data)
                 analysera_data_uppg4(befolkningsdata_2022, top_increases, top_decreases)
             else:
                 print("Problem uppstod vid choice 4")
@@ -127,20 +128,31 @@ def analysera_data_uppg2(lista):
 ################################ Uppgift 3 ################################
 
 def analysera_data_uppg3(lista):
-    data_rows = lista[1:]
+    data_rows = lista[1:]  # Exclude header row
 
-    # key=lambda x: float(x[5]): sorterar datan enligt 6:e column. Konverterar strings till floats för att numarical sortering
-    # annars det sorterar datan alfabetisk
-    data_rows_sorted = sorted(data_rows, key=lambda x: float(x[5]), reverse=True) 
+    # Sort data rows based on the absolute value of the change percentage, ensuring numerical sorting
+    # Reverse True to have largest changes (both increases and decreases) at the top
+    data_rows_sorted = sorted(data_rows, key=lambda x: abs(float(x[5])), reverse=True)
 
-    top_increases = data_rows_sorted[:5] #lagra den högsta fem
-    top_decreases = data_rows_sorted[-5:] #lagra den minsta fem
-    
+    # Filter and get the top 5 increases (positive changes)
+    top_increases = [row for row in data_rows_sorted if float(row[5]) > 0][:5]
+
+    # Filter and get the top 5 decreases (negative changes)
+    top_decreases = [row for row in data_rows_sorted if float(row[5]) < 0][:5]
+
+
+    return top_increases, top_decreases
+
+
+def print_table(top_increases, top_decreases):
+
     print("===================================================================================================")
     print("|          Förväntad befolkningsutveckling för tio länder inom EU under åren 2022 -- 2100          |")
     print("|          Tabellen visar de fem länder med störst respektive minst förväntad befolkningsökning    |")
     print("===================================================================================================")
     print("Estimerad befolkning:\n")
+
+
     print("{:<10} {:<25} {:<25} {:<20} {:<25} {:<15}".format(
         "Land", "Lägst befolkningstalet", "År", "Högst befolkningstalet", "År", "Förändring [%]"
     ))
@@ -155,7 +167,6 @@ def analysera_data_uppg3(lista):
     for i in top_decreases:
         print("{:<10} {:<25} {:<25} {:<20} {:<25} {:<15}".format(*i))
 
-    return top_increases, top_decreases
 
 
 
@@ -166,24 +177,35 @@ def normalize_population_data(data, base_year_index):
     return [((float(value.replace(' ', '')) / base_value) * 100) if value.strip() else None for value in data]
 
 def analysera_data_uppg4(lista, top_countries_increase, top_countries_decrease):
-    # The list of years should match the data provided for each country.
-    # Assuming the data starts from 2022 and goes annually up to the length of the population data.
-    years = list(range(2022, 2022 + len(lista[0]) - 1))  # Adjust this line if needed
+    
+    print(lista)
+    
+    print("\n\ntop_countries_increase")
+    print(top_countries_increase)
+    print("\n\ntop_countries_decrease")
+    print(top_countries_decrease)
 
-    plt.figure(figsize=(12, 8))
+    
+    
+    # # The list of years should match the data provided for each country.
+    # # Assuming the data starts from 2022 and goes annually up to the length of the population data.
+    # years = list(range(2022, 2022 + len(lista[0]) - 1))  # Adjust this line if needed
 
-    for country_data in top_countries_increase + top_countries_decrease:
-        country_name = country_data[0]
-        normalized_data = normalize_population_data(country_data[1:], 0)  # Normalizing against the first year in the list
-        plt.plot(years, normalized_data, label=country_name)
+    # plt.figure(figsize=(12, 8))
 
-    plt.title('Förväntad befolkningsutveckling inom EU för tidsperioden 2022 - 2100')
-    plt.xlabel('År')
-    plt.ylabel('Relativ befolkningsförändring från 2022 (%)')
-    plt.axhline(100, color='grey', linewidth=0.8, linestyle='--')  # Horizontal line at the 100% level
-    plt.grid(True)
-    plt.legend()
-    plt.show()
+    # for country_data in top_countries_increase + top_countries_decrease:
+    #     country_name = country_data[0]
+    #     normalized_data = normalize_population_data(country_data[1:], 0)  # Normalizing against the first year in the list
+    #     print(normalized_data)
+    #     plt.plot(years, normalized_data, label=country_name)
+
+    # plt.title('Förväntad befolkningsutveckling inom EU för tidsperioden 2022 - 2100')
+    # plt.xlabel('År')
+    # plt.ylabel('Relativ befolkningsförändring från 2022 (%)')
+    # plt.axhline(100, color='grey', linewidth=0.8, linestyle='--')  # Horizontal line at the 100% level
+    # plt.grid(True)
+    # plt.legend()
+    # plt.show()
 
 
 
