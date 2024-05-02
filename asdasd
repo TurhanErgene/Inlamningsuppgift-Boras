@@ -1,0 +1,79 @@
+the code below returns the given output:
+
+def analysera_data_uppg2(lista):
+    result_list = []
+    for row in lista:
+        country = row[0]
+        year_tvatva = int(row[1])
+        year_hundra = int(row[18])
+       
+
+        population_change = (year_hundra - year_tvatva) / year_hundra * 100
+        result_list.append([country, population_change])
+    return result_list
+
+
+befolkningsdata_2022 = read_file("befolkningsdata_2022.csv")
+
+
+if befolkningsdata_2022: 
+    analyzed_data = analysera_data_uppg2(befolkningsdata_2022)
+    print("Analysresultat:")
+    
+    for data in analyzed_data: # skriva ut returnerad data
+        print(data)
+
+output:
+
+Analysresultat:
+['Belgium', 7.47402829245814]
+['Bulgaria', -34.83317813935597]
+['Czechia', 1.2116261477763826]
+['Denmark', 4.124427897355669]
+['Germany', 1.0464109200223493]
+['Estonia', -3.2797106484353673]
+['Ireland', 13.819273026969606]
+['Greece', -43.62850796941995]
+['Spain', -5.122721352442443]
+['France', 0.2511374971808188]
+['Croatia', -36.830695836487834]
+['Italy', -17.60273491188003]
+['Cyprus', 10.224274340875962]
+['Latvia', -60.89345174887077]
+['Lithuania', -58.02438961205717]
+['Luxembourg', 35.2834296131327]
+['Hungary', -7.012911449530304]
+['Malta', 31.36964050707617]
+['Netherlands', 3.930732280361904]
+['Austria', 6.241206454131131]
+['Poland', -27.572310519144477]
+['Portugal', -15.265309558252394]
+['Romania', -30.342908240703004]
+['Slovenia', -8.015091089900658]
+['Slovakia', -19.3817214811938]
+['Finland', -15.9538745992837]
+['Sweden', 21.281973305691004]
+['Iceland', 39.755208700274764]
+['Norway', 19.40628338252153]
+['Switzerland', 13.514231697737728]
+ 
+
+write a function that picks the countries that have the highest and the lowest value beside on put it in a dictionary
+
+so the the dictionaries looks like this:
+
+countries_increase = {
+    'Iceland': 39.76,
+    'Luxembourg': 35.28,
+    'Malta': 31.37,
+    'Sweden': 21.28,
+    'Norway': 19.41
+}
+
+countries_decrease = {
+    'Bulgaria': -34.83,
+    'Croatia': -36.83,
+    'Greece': -43.63,
+    'Lithuania': -58.02,
+    'Latvia': -60.89
+}
