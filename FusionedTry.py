@@ -73,7 +73,7 @@ def menu():
         elif choice == "4":
             if befolkningsdata_2022:
                 top_increases, top_decreases = analysera_data_uppg3(befolkningsdata_2022) 
-                analysera_data_uppg4(befolkningsdata_2022, top_increases, top_decreases) 
+                analysera_data_uppg4(top_increases, top_decreases) 
             else:
                 print("Problem uppstod vid choice 4")
 
@@ -90,57 +90,41 @@ def menu():
 
 ################################ Uppgift 2 ################################
 # Returnerar det minsta värdet
-def min_värde(num_list):
-    min_val = num_list[0]
-    for num in num_list:
-        if num < min_val:
-            min_val = num
-    return min_val
+def min_värde(num_lista):
+     min_tal = num_lista[1]
+     for rad in num_lista[2:]:
+        if rad < min_tal:
+            min_tal = rad
+     return min_tal
+ 
 
-# Returnerar det största värdet 
-def max_värde(num_list):
-    max_val = num_list[0] 
-    for num in num_list: 
-        if num > max_val:
-            max_val = num
-    return max_val
+def max_värde(num_lista):
+    max_tal = num_lista[1]      
+    for rad in num_lista[2:]:   
+        if rad > max_tal:       
+            max_tal = rad
+    return max_tal
 
 def analysera_data_uppg2(lista):
-    result_list = []
-    for row in lista[1:]:
+    resultat = []
+    ar = lista[0]
+    for i, row in enumerate(lista[1:], start=1):
         country = row[0]
-        year_tvatva = float(row[1]) 
-        year_hundra = float(row[18]) 
-       
-        # population_years = list(map(int, row[1:]))  
-        lowest_population = min_värde(row) 
-        highest_population = max_värde(row) 
-        lowest_year = 2022 + row.index(lowest_population) 
-        highest_year = 2022 + row.index(highest_population) 
-        population_change = (year_hundra - year_tvatva) / year_tvatva * 100 
-        result_list.append([country, lowest_population, lowest_year, highest_population, highest_year, population_change]) 
-    return result_list
+        year_tvatva = float(row[1].replace(' ', ''))  # Remove spaces and convert to float
+        year_hundra = float(row[18].replace(' ', ''))  # Remove spaces and convert to float
 
-# def analysera_data_uppg2(lista):
-#     ar = lista[2:]
-#     resultat = []
-#     for row_index, row in enumerate(lista[1:], start=1):
-#         land = row[0]
+        min_tal = min_värde(row)
+        min_ar_index = row.index(str(min_värde(row)))  # Find index within the current row
+        min_ar = ar[min_ar_index]
+        max_tal = max_värde(row)
+        max_ar_index = row.index(str(max_värde(row)))  # Find index within the current row
+        max_ar = ar[max_ar_index]
         
-#         min_tal = min_värde(row)
-#         min_ar_index = row.index(str(min_värde(row)))  # Find index within the current row
-#         min_ar = ar[min_ar_index]
-#         max_tal = max_värde(row)
-#         max_ar_index = row.index(str(max_värde(row)))  # Find index within the current row
-#         max_ar = ar[max_ar_index]
         
-#         tal_start = float(row[1].replace(' ', ''))  # Remove spaces and convert to float
-#         tal_slut = float(row[18].replace(' ', ''))  # Remove spaces and convert to float
+        utveckling_start_slut = round(((year_hundra - year_tvatva) / year_tvatva) * 100, 3)
         
-#         utveckling_start_slut = round(((tal_slut - tal_start) / tal_start) * 100,2)
-        
-#         resultat.append([land, min_tal, min_ar, max_tal, max_ar,utveckling_start_slut])  # Append min_ar instead of min_value
-#     return resultat
+        resultat.append([country, min_tal, min_ar, max_tal, max_ar,utveckling_start_slut])  
+    return resultat
 
 
 ################################ Uppgift 3 ################################
@@ -189,7 +173,7 @@ def normalize_population_data(data, base_year_index): # base_year_index kan tas 
     return [((float(value.replace(' ', '')) / base_value) * 100) if value.strip() else None for value in data] # omvandlar varje befolkningsantalet till float, tar bort mellanslag och beräknar procenten för basåret. Om ett värde är tomt returneras None
 
 
-def analysera_data_uppg4(lista, top_countries_increase, top_countries_decrease):
+def analysera_data_uppg4(top_countries_increase, top_countries_decrease):
     years = [2022, 2023, 2025, 2030, 2035, 2040, 2045, 2050, 2055, 2060, 2065, 2070, 2075, 2080, 2085, 2090, 2095, 2100] 
 
     plt.figure(figsize=(12, 8)) 
