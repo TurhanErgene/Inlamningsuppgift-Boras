@@ -72,8 +72,9 @@ def menu():
             
         elif choice == "4":
             if befolkningsdata_2022:
-                top_increases, top_decreases = analysera_data_uppg3(befolkningsdata_2022) 
-                analysera_data_uppg4(top_increases, top_decreases) 
+                befolkningsdata_2022.pop(0)
+                # print("befolkningsdata_2022:", befolkningsdata_2022[:3])
+                analysera_data_uppg4(befolkningsdata_2022) 
             else:
                 print("Problem uppstod vid choice 4")
 
@@ -110,8 +111,8 @@ def analysera_data_uppg2(lista):
     ar = lista[0]
     for i, row in enumerate(lista[1:], start=1):
         country = row[0]
-        year_tvatva = float(row[1].replace(' ', ''))  # Remove spaces and convert to float
-        year_hundra = float(row[18].replace(' ', ''))  # Remove spaces and convert to float
+        year_tvatva = float(row[1]) 
+        year_hundra = float(row[18])
 
         min_tal = min_värde(row)
         min_ar_index = row.index(str(min_värde(row)))  # Find index within the current row
@@ -168,30 +169,49 @@ def print_table(top_increases,top_decreases):
 
 ################################ Uppgift 4 ################################
 
-def normalize_population_data(data, base_year_index): # base_year_index kan tas bort om den ersättas med 0 men det är lättare att läsa så här
-    base_value = float(data[base_year_index].replace(' ', '')) # extrahera basvärdet, hämtar befolkningsantalet för basåret och omvandlar den till float samt tar bort mellanslag
-    return [((float(value.replace(' ', '')) / base_value) * 100) if value.strip() else None for value in data] # omvandlar varje befolkningsantalet till float, tar bort mellanslag och beräknar procenten för basåret. Om ett värde är tomt returneras None
+def normalize_population_data(data):
+    base_year_value = float(data[1].replace(' ', ''))
+    normalized_data = [100]
+    for value in data[2:]: 
+        if value.strip():  
+            normalized_value = (float(value.replace(' ', '')) / base_year_value) * 100
+            normalized_data.append(normalized_value)
+        else:
+            normalized_data.append(None) 
+    return normalized_data
+
+def get_top_and_bottom_countries(population_data):
+    growth_rates = []
+    for data in population_data:
+        start_pop = float(data[1])
+        end_pop = float(data[-1])
+        growth_rate = (end_pop - start_pop) / start_pop * 100
+        growth_rates.append((data[0], growth_rate)) 
+
+    sorted_growth = sorted(growth_rates, key=lambda x: x[1], reverse=True) 
+    top_countries = [x[0] for x in sorted_growth[:5]]       
+    bottom_countries = [x[0] for x in sorted_growth[-5:]]   
+    return top_countries, bottom_countries
 
 
-def analysera_data_uppg4(top_countries_increase, top_countries_decrease):
+def analysera_data_uppg4(lista):
     years = [2022, 2023, 2025, 2030, 2035, 2040, 2045, 2050, 2055, 2060, 2065, 2070, 2075, 2080, 2085, 2090, 2095, 2100] 
+    
+    top_countries, bottom_countries = get_top_and_bottom_countries(lista)
 
-    plt.figure(figsize=(12, 8)) 
+    plt.figure(figsize=(14, 7))
+    for data in lista:
+        if data[0] in top_countries or data[0] in bottom_countries:
+            normalized_data = normalize_population_data(data)
+            plt.plot(years, normalized_data, label=data[0])
 
-    for country_data in top_countries_increase + top_countries_decrease:
-        country_name = country_data[0] 
-        normalized_data = normalize_population_data(country_data[1:], 0)  
-        plt.plot(years, normalized_data, label=country_name) 
-
-    plt.title('Förväntad befolkningsutveckling inom EU för tidsperioden 2022 - 2100') 
+    plt.title('Relativ befolkningsutveckling 2022-2100')
     plt.xlabel('År')
-    plt.ylabel('Relativ befolkningsförändring från 2022 (%)')
-
-    plt.axhline(100, color='grey', linewidth=0.8, linestyle='--') 
-    plt.grid(True) 
-    plt.legend() 
-    plt.show() 
-
+    plt.ylabel('Relativ befolkningsförändring (%)')
+    plt.axhline(100, color='grey', linestyle='--', linewidth=0.8)  # Normvärdet 100
+    plt.grid()
+    plt.legend()
+    plt.show()
 
 if __name__ == "__main__":
     menu()

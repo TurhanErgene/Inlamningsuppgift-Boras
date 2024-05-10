@@ -72,7 +72,7 @@ def menu():
             
         elif choice == "4":
             if befolkningsdata_2022:
-                befolkningsdata_2022.pop(0) # ta bort raden med 'COUNTRY' 
+                befolkningsdata_2022.pop(0)
                 # print("befolkningsdata_2022:", befolkningsdata_2022[:3])
                 analysera_data_uppg4(befolkningsdata_2022) 
             else:
@@ -170,26 +170,26 @@ def print_table(top_increases,top_decreases):
 ################################ Uppgift 4 ################################
 
 def normalize_population_data(data):
-    #This function normalizes the population data of a country relative to its population in the year 2022.
-    base_year_value = float(data[1])
+    base_year_value = float(data[1].replace(' ', ''))  # Assuming the second element (index 1) is the population for 2022
     normalized_data = [100]  # Start with 100 for the base year 2022
     for value in data[2:]:  # Start from 2023 onward
         if value.strip():  # Ensure the string is not empty
-            normalized_value = (float(value) / base_year_value) * 100
+            normalized_value = (float(value.replace(' ', '')) / base_year_value) * 100
             normalized_data.append(normalized_value)
+       
     return normalized_data
 
 def get_top_and_bottom_countries(population_data):
     growth_rates = []
     for data in population_data:
-        start_pop = float(data[1])
-        end_pop = float(data[-1])
+        start_pop = float(data[1].replace(' ', ''))
+        end_pop = float(data[-1].replace(' ', ''))
         growth_rate = (end_pop - start_pop) / start_pop * 100
-        growth_rates.append((data[0], growth_rate))     # sparar datan intill growth_rates som tuple
+        growth_rates.append((data[0], growth_rate)) # sparar datan intill growth_rates som tuple
 
-    sorted_growth = sorted(growth_rates, key=lambda x: x[1], reverse=True) #Sorts the list of tuples based on the growth rate, from highest to lowest.
-    top_countries = [x[0] for x in sorted_growth[:5]]       # Creates a list of the names of the top five countries.
-    bottom_countries = [x[0] for x in sorted_growth[-5:]]   # Creates a list of the names of the bottom five countries.
+    sorted_growth = sorted(growth_rates, key=lambda x: x[1], reverse=True)
+    top_countries = [x[0] for x in sorted_growth[:5]]
+    bottom_countries = [x[0] for x in sorted_growth[-5:]]
     return top_countries, bottom_countries
 
 
@@ -197,11 +197,11 @@ def analysera_data_uppg4(lista):
     # Extract year labels from the first row, assuming they are correctly ordered and correspond to the population data
     years = [2022, 2023, 2025, 2030, 2035, 2040, 2045, 2050, 2055, 2060, 2065, 2070, 2075, 2080, 2085, 2090, 2095, 2100] 
     
-    top_countries, bottom_countries = get_top_and_bottom_countries(lista)
+    top_countries, bottom_countries = get_top_and_bottom_countries(lista[1:])
 
     plt.figure(figsize=(14, 7))
-    for data in lista:
-        if data[0] in top_countries or data[0] in bottom_countries: # Skapa plotten bara om datan finns i respektive landerna
+    for data in lista[1:]:
+        if data[0] in top_countries or data[0] in bottom_countries:
             normalized_data = normalize_population_data(data)
             plt.plot(years, normalized_data, label=data[0])
 
