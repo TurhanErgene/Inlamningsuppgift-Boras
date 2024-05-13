@@ -47,11 +47,11 @@ def menu():
 
             if befolkningsdata_2019:
                 print("Första två raderna i befolkningsdata_2019:")
-                for row in befolkningsdata_2019[:2]: 
+                for row in befolkningsdata_2019[1:3]: 
                     print(row)
             if befolkningsdata_2022:
                 print("\nFörsta två raderna i befolkningsdata_2022:")
-                for row in befolkningsdata_2022[:2]:
+                for row in befolkningsdata_2022[1:3]:
                     print(row)
 
         elif choice == "2":
@@ -72,9 +72,9 @@ def menu():
             
         elif choice == "4":
             if befolkningsdata_2022:
-                befolkningsdata_2022.pop(0) # ta bort raden med 'COUNTRY' 
+                # befolkningsdata_2022.pop(0) # ta bort raden med 'COUNTRY' 
                 # print("befolkningsdata_2022:", befolkningsdata_2022[:3])
-                analysera_data_uppg4(befolkningsdata_2022) 
+                analysera_data_uppg4(befolkningsdata_2022[1:]) 
             else:
                 print("Problem uppstod vid choice 4")
 

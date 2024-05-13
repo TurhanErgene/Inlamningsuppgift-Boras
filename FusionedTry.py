@@ -4,6 +4,7 @@
 ######
 import csv
 import matplotlib.pyplot as plt
+import numpy as np
 
 
 def read_file(file_name):
@@ -47,16 +48,18 @@ def menu():
 
             if befolkningsdata_2019:
                 print("Första två raderna i befolkningsdata_2019:")
-                for row in befolkningsdata_2019[:2]: 
+                for row in befolkningsdata_2019[1:3]: 
                     print(row)
             if befolkningsdata_2022:
                 print("\nFörsta två raderna i befolkningsdata_2022:")
-                for row in befolkningsdata_2022[:2]:
+                for row in befolkningsdata_2022[1:3]:
                     print(row)
+        
+            # print("befolkningsdata_2019:", befolkningsdata_2019[:3]) 
+            # print("befolkningsdata_2022:", befolkningsdata_2022[:3])
 
         elif choice == "2":
             if befolkningsdata_2022:  
-                # print("befolkningsdata_2022[1:]: ",str(befolkningsdata_2022[1:]))
                 analyzed_data = analysera_data_uppg2(befolkningsdata_2022)
                 for data in analyzed_data: 
                     print(data)
@@ -72,15 +75,19 @@ def menu():
             
         elif choice == "4":
             if befolkningsdata_2022:
-                befolkningsdata_2022.pop(0)
+                # befolkningsdata_2019.pop(0) # ta bort raden med 'COUNTRY' 
+                # befolkningsdata_2022.pop(0)
                 # print("befolkningsdata_2022:", befolkningsdata_2022[:3])
-                analysera_data_uppg4(befolkningsdata_2022) 
+                analysera_data_uppg4(befolkningsdata_2022[1:]) 
             else:
                 print("Problem uppstod vid choice 4")
 
         elif choice == "5":
-            # Ska läggas senare
-            pass
+            resultat_2019, resultat_2022 = analysera_data_uppg5(befolkningsdata_2019, befolkningsdata_2022)
+            print("resultat_2019: ", resultat_2019)
+            print("\nresultat_2022: ", resultat_2022)
+
+
         elif choice == "6":
             print("Avslutar programmet.")
             break
@@ -170,14 +177,13 @@ def print_table(top_increases,top_decreases):
 ################################ Uppgift 4 ################################
 
 def normalize_population_data(data):
-    base_year_value = float(data[1].replace(' ', ''))
-    normalized_data = [100]
-    for value in data[2:]: 
-        if value.strip():  
-            normalized_value = (float(value.replace(' ', '')) / base_year_value) * 100
+    #This function normalizes the population data of a country relative to its population in the year 2022.
+    base_year_value = float(data[1])
+    normalized_data = [100]  # Start with 100 for the base year 2022
+    for value in data[2:]:  # Start from 2023 onward
+        if value.strip():  # Ensure the string is not empty
+            normalized_value = (float(value) / base_year_value) * 100
             normalized_data.append(normalized_value)
-        else:
-            normalized_data.append(None) 
     return normalized_data
 
 def get_top_and_bottom_countries(population_data):
@@ -186,22 +192,24 @@ def get_top_and_bottom_countries(population_data):
         start_pop = float(data[1])
         end_pop = float(data[-1])
         growth_rate = (end_pop - start_pop) / start_pop * 100
-        growth_rates.append((data[0], growth_rate)) 
+        growth_rates.append((data[0], growth_rate))     # sparar datan intill growth_rates som tuple
 
-    sorted_growth = sorted(growth_rates, key=lambda x: x[1], reverse=True) 
-    top_countries = [x[0] for x in sorted_growth[:5]]       
-    bottom_countries = [x[0] for x in sorted_growth[-5:]]   
+    sorted_growth = sorted(growth_rates, key=lambda x: x[1], reverse=True) #Sorts the list of tuples based on the growth rate, from highest to lowest.
+    top_countries = [x[0] for x in sorted_growth[:5]]       # Creates a list of the names of the top five countries.
+    bottom_countries = [x[0] for x in sorted_growth[-5:]]   # Creates a list of the names of the bottom five countries.
     return top_countries, bottom_countries
 
 
 def analysera_data_uppg4(lista):
+    # Extract year labels from the first row, assuming they are correctly ordered and correspond to the population data
     years = [2022, 2023, 2025, 2030, 2035, 2040, 2045, 2050, 2055, 2060, 2065, 2070, 2075, 2080, 2085, 2090, 2095, 2100] 
     
     top_countries, bottom_countries = get_top_and_bottom_countries(lista)
 
     plt.figure(figsize=(14, 7))
     for data in lista:
-        if data[0] in top_countries or data[0] in bottom_countries:
+        # print("data: ", data)
+        if data[0] in top_countries or data[0] in bottom_countries: # Skapa plotten bara om datan finns i respektive landerna
             normalized_data = normalize_population_data(data)
             plt.plot(years, normalized_data, label=data[0])
 
@@ -212,6 +220,54 @@ def analysera_data_uppg4(lista):
     plt.grid()
     plt.legend()
     plt.show()
+
+
+
+################################ Uppgift 5 ################################
+
+
+
+def analysera_data_uppg5(lista_1, lista_2):
+    list_2019 = []
+    list_2022 = []
+
+    for i, row in enumerate(lista_1[1:], start=1):
+        country = row[0]
+        year_nitton = float(row[1])
+        year_hundra = float(row[18])
+        utveckling_start_slut = round(((year_hundra - year_nitton) / year_nitton) * 100, 3)
+        list_2019.append([country, utveckling_start_slut])
+
+    for i, row in enumerate(lista_2[1:], start=1):
+        country = row[0]
+        year_tvatva = float(row[1])
+        year_hundra = float(row[18])
+        utveckling_start_slut = round(((year_hundra - year_tvatva) / year_tvatva) * 100, 3)
+        list_2022.append([country, utveckling_start_slut])
+
+    countries = [country for country, i in list_2019]
+    values_2019 = [value for i, value in list_2019]
+    values_2022 = [value for i, value in list_2022]
+
+    y = np.arange(len(countries))  # y-axis position for each bar
+    bar_width = 0.35  # Width of each bar
+
+    fig, ax = plt.subplots(figsize=(10, 15))
+    bars_2019 = ax.barh(y - bar_width/2, values_2019, bar_width, label='2019-2100', color='blue')
+    bars_2022 = ax.barh(y + bar_width/2, values_2022, bar_width, label='2022-2100', color='yellow')
+
+    ax.set_yticks(y)
+    ax.set_yticklabels(countries)
+    ax.set_xlabel('Befolkningsutveckling (%)')
+    ax.set_title('Förväntade befolkningsutvecklingar 2100 för olika länder baserat på 2019 och 2022 data')
+    ax.invert_yaxis()  # Invert the y-axis to have the first entry at the top
+    ax.legend()
+    plt.grid()
+
+    plt.show()
+
+    return list_2019, list_2022
+
 
 if __name__ == "__main__":
     menu()
