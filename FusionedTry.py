@@ -83,9 +83,7 @@ def menu():
                 print("Problem uppstod vid choice 4")
 
         elif choice == "5":
-            resultat_2019, resultat_2022 = analysera_data_uppg5(befolkningsdata_2019, befolkningsdata_2022)
-            print("resultat_2019: ", resultat_2019)
-            print("\nresultat_2022: ", resultat_2022)
+            analysera_data_uppg5(befolkningsdata_2019, befolkningsdata_2022)
 
 
         elif choice == "6":
@@ -225,36 +223,51 @@ def analysera_data_uppg4(lista):
 
 ################################ Uppgift 5 ################################
 
-
-
 def analysera_data_uppg5(lista_1, lista_2):
     list_2019 = []
     list_2022 = []
 
+    # Extract data for 2019 predictions
     for i, row in enumerate(lista_1[1:], start=1):
         country = row[0]
         year_nitton = float(row[1])
         year_hundra = float(row[18])
-        utveckling_start_slut = round(((year_hundra - year_nitton) / year_nitton) * 100, 3)
-        list_2019.append([country, utveckling_start_slut])
+        growth_2019 = round(((year_hundra - year_nitton) / year_nitton) * 100, 3)
+        list_2019.append((country, growth_2019))
 
+    # Extract data for 2022 predictions
     for i, row in enumerate(lista_2[1:], start=1):
         country = row[0]
         year_tvatva = float(row[1])
         year_hundra = float(row[18])
-        utveckling_start_slut = round(((year_hundra - year_tvatva) / year_tvatva) * 100, 3)
-        list_2022.append([country, utveckling_start_slut])
+        growth_2022 = round(((year_hundra - year_tvatva) / year_tvatva) * 100, 3)
+        list_2022.append((country, growth_2022))
 
-    countries = [country for country, i in list_2019]
-    values_2019 = [value for i, value in list_2019]
-    values_2022 = [value for i, value in list_2022]
+    # Combine and sort the data by average growth rate
+    combined_data = []
+    for i in range(len(list_2019)):
+        country = list_2019[i][0]  # Hämta namn
+        average_growth = (list_2019[i][1] + list_2022[i][1]) / 2 
+        combined_data.append((country, list_2019[i][1], list_2022[i][1], average_growth))
+        # print("list_2019[i][1]", list_2019[i][1])
+        # print("list_2022[i][1]", list_2022[i][1])
+
+    # print("\ncombined_data: ", combined_data)
+    combined_data.sort(key=lambda x: x[3], reverse=True)  # Sort by average growth
+    # print("\ncombined_data2: ", combined_data)    
+
+    # Split the sorted data into separate lists for plotting
+    countries = [data[0] for data in combined_data]
+    values_2019 = [data[1] for data in combined_data]
+    values_2022 = [data[2] for data in combined_data]
 
     y = np.arange(len(countries))  # y-axis position for each bar
     bar_width = 0.35  # Width of each bar
 
+    # Create a subplot; 'ax' is used for further plotting
     fig, ax = plt.subplots(figsize=(10, 15))
     bars_2019 = ax.barh(y - bar_width/2, values_2019, bar_width, label='2019-2100', color='blue')
-    bars_2022 = ax.barh(y + bar_width/2, values_2022, bar_width, label='2022-2100', color='yellow')
+    bars_2022 = ax.barh(y + bar_width/2, values_2022, bar_width, label='2022-2100', color='red')
 
     ax.set_yticks(y)
     ax.set_yticklabels(countries)
@@ -266,7 +279,8 @@ def analysera_data_uppg5(lista_1, lista_2):
 
     plt.show()
 
-    return list_2019, list_2022
+    # print("\nresultat_2019: ", list_2019)
+    # print("\nresultat_2022: ", list_2022)
 
 
 if __name__ == "__main__":
