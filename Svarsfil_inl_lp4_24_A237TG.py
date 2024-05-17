@@ -1,7 +1,10 @@
 #####
 # Detta program läser in två csv analyserar datan som finns i dem.
+# Programmet sorterar datan som finns i dem csv filerna och skapar plot/grafer för dem på hittade datan
 
+# Last edit: 2024-05-17 03:07
 ######
+
 import csv
 import matplotlib.pyplot as plt
 import numpy as np
@@ -265,7 +268,7 @@ def analysera_data_uppg5(lista_1, lista_2):
     ax.set_yticklabels(countries)
     ax.set_xlabel('Befolkningsutveckling (%)')
     ax.set_title('Förväntade befolkningsutvecklingar 2100 för olika länder baserat på 2019 och 2022 data')
-    ax.invert_yaxis()  # https://stackoverflow.com/questions/2051744/how-to-invert-the-x-or-y-axis 
+    ax.invert_yaxis()  # sortera omvänd
     ax.legend()
     plt.grid()
 

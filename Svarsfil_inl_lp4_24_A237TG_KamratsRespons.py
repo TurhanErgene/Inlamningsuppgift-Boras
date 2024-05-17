@@ -1,6 +1,6 @@
 # Skriv en inledande kommentar som talar om vad programmet gör. 
 
-#Detta program läser in två filer om förväntade befolkning, samt gör olika beräkningar på detta.
+# Detta program läser in två filer om förväntade befolkning, samt gör olika beräkningar på detta.
 
 # Placera dina modulimpoter här:
 
