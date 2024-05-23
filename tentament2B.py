@@ -21,3 +21,31 @@ while raknare < antal_primal:
             print()
 
     tal += 1
+
+
+# Wrong way
+
+ANTAL_KOLUMNER = 5
+tal = 2
+raknare = 0
+
+antal_primal = int(input("Skriv in antal primtal som önskas visas: "))
+print(f'De första {antal_primal} primtalen är:')
+
+
+while raknare < antal_primal:
+    ar_prim = False 
+    divisor = 2
+    while divisor >= tal / 2:
+        if tal % divisor == 0:
+            ar_prim = False  
+            continue  
+        divisor += 1  
+
+    if ar_prim:
+        raknare += 1
+        print(f'{tal:5d}', end='')
+        if raknare % ANTAL_KOLUMNER == 0:
+            print()
+
+    tal += 1
