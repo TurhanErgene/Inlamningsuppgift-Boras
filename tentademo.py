@@ -31,3 +31,30 @@ if sprak == '2':
                 resultat += orden[i] + ' '
     
     print('Översättning: ', resultat)
+
+
+
+    
+# def analysera_kol(lista, kol):
+
+#     # Högsta 8
+#     print("\nDe 8 lägsta värdena i kolumn ", kol)
+#     print("Country name\t\t\t ", str(lista[0][kol]))
+#     print(f"+{'-'*31}+{'-'*31}+")
+#     for i, row in enumerate(lista[1:9], start=1):
+#         print("|",lista[i][0],"\t\t\t|", row[kol],"\t\t\t|")
+#         print(f"+{'-'*31}+{'-'*31}+")
+
+
+#     # # minsta 8
+#     print("\nDe 8 lägsta värdena i kolumn ", kol)
+#     print("Country name\t\t\t ", str(lista[0][kol]))
+#     print(f"+{'-'*31}+{'-'*29}+")
+#     for i, row in enumerate(lista[-8:], start=1):
+#         print("|",lista[i][0],"\t\t\t|", row[kol],"\t\t\t|")
+#         print(f"+{'-'*31}+{'-'*31}+")
+    
+
+
+# antal_kol = int(input("Ange vilken kolumn (1-7) i listan WHR1Data som ska analyseras: "))
+# analysera_kol(WHR1Data, antal_kol)
